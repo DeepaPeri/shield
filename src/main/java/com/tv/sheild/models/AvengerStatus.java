@@ -1,6 +1,6 @@
 package com.tv.sheild.models;
 
 public enum AvengerStatus {
-    Available,
-    OnMission
+    AVAILABLE,
+    ON_MISSION
 }

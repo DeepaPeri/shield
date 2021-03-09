@@ -11,45 +11,57 @@ import java.util.Set;
 public class SheildService {
 
     public static void checkMissions(Set<Mission> missions) {
-        if (missions.size() < 1) {
+        if (missions.isEmpty()) {
             System.out.println("No Mission has been assigned to an Avenger");
         } else {
             missions.forEach(mission -> {
-                System.out.println();
-                System.out.print(mission.toString() + ", ");
-                mission.getAvengers().forEach(
-                    avenger -> {
-                        System.out.print(avenger.getAvengerName() + ", ");
-                    }
-                );
+                System.out.println(mission.toString());
             });
         }
     }
 
     public static void checkMissionsDetails(DataSource dataSource, String missionsName) {
-        System.out.println(dataSource.getMission(missionsName).toString());
+        Mission mission = dataSource.getMission(missionsName);
+        System.out.println(mission.toString() + ", mission details : " + mission.getMissionDetails());
+    }
+
+    public static void checkAvengerDetails(DataSource dataSource, String avengerName) {
+        Avenger avenger = dataSource.getAvenger(avengerName);
+        System.out.println(avenger.toString() + ", missions assigned : " + avenger.getMissionAssigned().size() + ", missions completed : " + avenger.getMissionsCompleted().size());
+    }
+
+    public static void sendNotification(Avenger avenger, Mission mission) {
+        avenger.getNotificationMediumMedia().forEach(notification -> notification.sendMessage(mission, avenger, "Notification via " + notification.getClass().getSimpleName() + " has been sent to : " + avenger.getAvengerName()));
     }
 
     public static void assignMissionToAvengers(String[] avengersList, String missionName, String missionDetails, DataSource dataSource) {
         Set<Avenger> avengerSet = new HashSet<>();
         Set<Mission> missionsSet;
+        Mission mission = new Mission(missionName, missionDetails, MissionStatus.ASSIGNED);
 
-        Mission mission = new Mission(missionName, missionDetails, MissionStatus.Assigned);
         for (int i = 0; i < avengersList.length; i++) {
             Avenger avenger = dataSource.getAvenger(avengersList[i]);
-            dataSource.removeAvenger(avenger);
 
-            avenger.setStatus(AvengerStatus.OnMission);
-            missionsSet = avenger.getMissionAssigned();
-            if (missionsSet.size() < 2) {
-                missionsSet.add(mission);
+            if (avenger == null) {
+                System.out.println("Avenger is not in S.H.I.E.L.D, please assign valied avenger");
+                return;
             }
+
+            missionsSet = avenger.getMissionAssigned();
+            if (missionsSet.size() == 2) {
+                System.out.println("Avenger " + avenger.getAvengerName() + " already has two missions assigned, current mission cannot be assigned");
+                return;
+            }
+
+            missionsSet.add(mission);
+            dataSource.removeAvenger(avenger);
+            avenger.setStatus(AvengerStatus.ON_MISSION);
 
             avenger.setMissionAssigned(missionsSet);
             dataSource.addAvenger(avenger);
             avengerSet.add(avenger);
 
-            avenger.getNotificationMediumMedia().forEach(notification -> notification.sendMessage(mission, avenger, "Notification via " + notification.getClass().getSimpleName() + " has been sent to : " + avenger.getAvengerName()));
+            SheildService.sendNotification(avenger, mission);
         }
         mission.setAvengers(avengerSet);
         dataSource.addMission(mission);
@@ -57,27 +69,35 @@ public class SheildService {
 
     public static void updateMissionStatus(String missionName, DataSource dataSource, String status) {
         Mission mission = dataSource.getMission(missionName);
+        if (mission == null) {
+            System.out.println("Invalid mission name, the request mission doesn't exist");
+            return;
+        }
         dataSource.removeMission(mission);
         switch (status) {
             case "Completed":
-                mission.setMissionStatus(MissionStatus.Completed);
+                mission.setMissionStatus(MissionStatus.COMPLETED);
                 mission.getAvengers().forEach(avenger -> {
                     avenger.addMissionsCompleted(mission);
                     avenger.removeMissionsAssigned(mission);
-                    if(avenger.getMissionAssigned().size() < 1){
-                        avenger.setStatus(AvengerStatus.Available);
+                    if (!avenger.getMissionAssigned().isEmpty() && (avenger.getMissionAssigned().size() < 2)) {
+                        avenger.setStatus(AvengerStatus.AVAILABLE);
                     }
                 });
                 break;
             case "Assigned":
-                mission.setMissionStatus(MissionStatus.Assigned);
+                mission.setMissionStatus(MissionStatus.ASSIGNED);
+                break;
+            default:
+                System.out.println("Invalid mission status, cannot be updated");
                 break;
         }
         dataSource.addMission(mission);
-        mission.getAvengers().forEach(
-                avenger -> avenger.getNotificationMediumMedia().
-                        forEach(notification -> notification.sendMessage(mission, avenger, "Notification via " + notification.getClass().getSimpleName() + " has been sent to : " + avenger.getAvengerName())));
 
+        mission.getAvengers().forEach(
+                avenger ->
+                        SheildService.sendNotification(avenger, mission)
+        );
     }
 
     public static void listAvengers(DataSource dataSource) {

@@ -22,11 +22,12 @@ public class DataSource {
 
     private Set<Mission> missions;
 
-    public DataSource(){
+    public DataSource() {
         createCaptains();
         createAvengers();
         missions = new HashSet<>();
     }
+
     private Set<NotificationMedium> createNotificationMeidum(Set<NotificationTypes> mediums) {
 
         NotificationMedium notificationMediumEmail = null;
@@ -81,7 +82,7 @@ public class DataSource {
         Set<NotificationTypes> notificationMedia = new HashSet<>();
         notificationMedia.add(NotificationTypes.EMAIL);
 
-        Avenger avenger = new Avenger("Iron Man", "Technology", new HashSet<>(), new HashSet<>(), createNotificationMeidum(notificationMedia), createAcl(Roles.AVENGER), AvengerStatus.Available);
+        Avenger avenger = new Avenger("Iron Man", "Technology", new HashSet<>(), new HashSet<>(), createNotificationMeidum(notificationMedia), createAcl(Roles.AVENGER), AvengerStatus.AVAILABLE);
 
         avengers.add(avenger);
 
@@ -90,7 +91,7 @@ public class DataSource {
         notificationMedia.add(NotificationTypes.EMAIL);
         notificationMedia.add(NotificationTypes.SMS);
 
-        avenger = new Avenger("Captain America", "Strength", new HashSet<>(), new HashSet<>(), createNotificationMeidum(notificationMedia), createAcl(Roles.AVENGER), AvengerStatus.Available);
+        avenger = new Avenger("Captain America", "Strength", new HashSet<>(), new HashSet<>(), createNotificationMeidum(notificationMedia), createAcl(Roles.AVENGER), AvengerStatus.AVAILABLE);
 
         avengers.add(avenger);
 
@@ -100,7 +101,7 @@ public class DataSource {
         notificationMedia.add(NotificationTypes.SMS);
         notificationMedia.add(NotificationTypes.PAGER);
 
-        avenger = new Avenger("Hulk", "Bulky", new HashSet<>(), new HashSet<>(), createNotificationMeidum(notificationMedia), createAcl(Roles.AVENGER), AvengerStatus.Available);
+        avenger = new Avenger("Hulk", "Bulky", new HashSet<>(), new HashSet<>(), createNotificationMeidum(notificationMedia), createAcl(Roles.AVENGER), AvengerStatus.AVAILABLE);
 
         avengers.add(avenger);
 
@@ -110,7 +111,7 @@ public class DataSource {
         notificationMedia.add(NotificationTypes.SMS);
         notificationMedia.add(NotificationTypes.PAGER);
 
-        avenger = new Avenger("Thor", "Hammer", new HashSet<>(), new HashSet<>(), createNotificationMeidum(notificationMedia), createAcl(Roles.AVENGER), AvengerStatus.Available);
+        avenger = new Avenger("Thor", "Hammer", new HashSet<>(), new HashSet<>(), createNotificationMeidum(notificationMedia), createAcl(Roles.AVENGER), AvengerStatus.AVAILABLE);
 
         avengers.add(avenger);
 
@@ -120,7 +121,7 @@ public class DataSource {
         notificationMedia.add(NotificationTypes.SMS);
         notificationMedia.add(NotificationTypes.PAGER);
 
-        avenger = new Avenger("Black Widow", "Fight Skills", new HashSet<>(), new HashSet<>(), createNotificationMeidum(notificationMedia), createAcl(Roles.AVENGER), AvengerStatus.Available);
+        avenger = new Avenger("Black Widow", "Fight Skills", new HashSet<>(), new HashSet<>(), createNotificationMeidum(notificationMedia), createAcl(Roles.AVENGER), AvengerStatus.AVAILABLE);
 
         avengers.add(avenger);
 
@@ -130,7 +131,7 @@ public class DataSource {
         notificationMedia.add(NotificationTypes.SMS);
         notificationMedia.add(NotificationTypes.PAGER);
 
-        avenger = new Avenger("Hawkeye", "Archery", new HashSet<>(), new HashSet<>(), createNotificationMeidum(notificationMedia), createAcl(Roles.AVENGER), AvengerStatus.Available);
+        avenger = new Avenger("Hawkeye", "Archery", new HashSet<>(), new HashSet<>(), createNotificationMeidum(notificationMedia), createAcl(Roles.AVENGER), AvengerStatus.AVAILABLE);
 
         avengers.add(avenger);
 
@@ -178,11 +179,11 @@ public class DataSource {
         this.captains = captains;
     }
 
-    public void addMission(Mission mission){
+    public void addMission(Mission mission) {
         missions.add(mission);
     }
 
-    public void removeMission(Mission mission){
+    public void removeMission(Mission mission) {
         missions.remove(mission);
     }
 
@@ -194,18 +195,18 @@ public class DataSource {
         this.missions = missions;
     }
 
-    public Mission getMission(String missionName){
-       for(Mission mission : missions){
-           if(mission.getMissionName().equals(missionName)){
-               return mission;
-           }
-       }
-       return null;
+    public Mission getMission(String missionName) {
+        for (Mission mission : missions) {
+            if (mission.getMissionName().equals(missionName)) {
+                return mission;
+            }
+        }
+        return null;
     }
 
-    public Avenger getAvenger(String avengerName){
-        for(Avenger avenger : avengers){
-            if(avenger.getAvengerName().equals(avengerName)){
+    public Avenger getAvenger(String avengerName) {
+        for (Avenger avenger : avengers) {
+            if (avenger.getAvengerName().equals(avengerName)) {
                 return avenger;
             }
         }

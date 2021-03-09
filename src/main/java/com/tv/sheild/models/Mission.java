@@ -12,14 +12,14 @@ public class Mission {
 
     private Set<Avenger> avengers;
 
-    public String getMissionName() {
-        return missionName;
-    }
-
     public Mission(String missionName, String missionDetails, MissionStatus missionStatus) {
         this.missionName = missionName;
         this.missionDetails = missionDetails;
         this.missionStatus = missionStatus;
+    }
+
+    public String getMissionName() {
+        return missionName;
     }
 
     public void setMissionName(String missionName) {
@@ -52,6 +52,10 @@ public class Mission {
 
     @Override
     public String toString() {
-        return "Mission Name : " + missionName +  ", details : " + missionDetails + " status : "+ missionStatus;
+        String avengersCommaSeperated = "| ";
+        for (Avenger avenger : avengers) {
+            avengersCommaSeperated = avengersCommaSeperated.concat(avenger.getAvengerName() + "| ");
+        }
+        return "Mission Name : " + missionName + ", mission status : " + missionStatus + ", avengers : " + avengersCommaSeperated;
     }
 }

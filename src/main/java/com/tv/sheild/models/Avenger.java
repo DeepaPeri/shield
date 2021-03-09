@@ -58,14 +58,16 @@ public class Avenger {
         return missionsCompleted;
     }
 
-    public void addMissionsCompleted(Mission mission){
-        this.missionsCompleted.add(mission);
-    }
-    public void removeMissionsAssigned(Mission mission){
-        this.missionsCompleted.remove(mission);
-    }
     public void setMissionsCompleted(Set<Mission> missionsCompleted) {
         this.missionsCompleted = missionsCompleted;
+    }
+
+    public void addMissionsCompleted(Mission mission) {
+        this.missionsCompleted.add(mission);
+    }
+
+    public void removeMissionsAssigned(Mission mission) {
+        this.missionsCompleted.remove(mission);
     }
 
     public Set<NotificationMedium> getNotificationMediumMedia() {
@@ -94,6 +96,6 @@ public class Avenger {
 
     @Override
     public String toString() {
-        return "Avenger name : " + avengerName + ", ability : " + abilities + ", Status : " + status ;
+        return "Avenger name : " + avengerName + ", ability : " + abilities + ", Status : " + status;
     }
 }

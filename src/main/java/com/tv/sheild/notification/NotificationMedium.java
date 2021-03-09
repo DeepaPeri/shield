@@ -5,6 +5,6 @@ import com.tv.sheild.models.Mission;
 
 public interface NotificationMedium {
 
-    public void sendMessage(Mission mission, Avenger avenger, String message);
+    void sendMessage(Mission mission, Avenger avenger, String message);
 
 }

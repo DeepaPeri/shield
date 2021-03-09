@@ -1,23 +1,17 @@
 package com.tv.sheild;
 
 import com.tv.sheild.datasource.DataSource;
-import com.tv.sheild.models.Avenger;
-import com.tv.sheild.models.Captain;
 import com.tv.sheild.service.SheildService;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Scanner;
-import java.util.Set;
 
 public class Main {
     public static void main(String[] args) throws IOException {
         DataSource dataSource = new DataSource();
-
-        // get captains and avengers
-        Set<Captain> captains = dataSource.getCaptains();
-        Set<Avenger> avengers = dataSource.getAvengers();
-
+        /*
+         * Introduction
+         * */
         System.out.println("============------------S.H.I.E.L.D------------============");
         System.out.println("Welcome to Captain Fury.");
         System.out.println("1. Check the missions\n" +
@@ -26,17 +20,26 @@ public class Main {
                 "4. Check Avenger’s details\n" +
                 "5. Update Mission’s status\n" +
                 "6. List Avengers");
-        Scanner sc = new Scanner(System.in);
+
         while (true) {
-            System.out.println("Enter the option: ");
-            int choice = sc.nextInt();
+            /*
+             * Read choice
+             * */
             java.io.BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+            System.out.println("Enter the option: ");
+            int choice = Integer.parseInt(in.readLine());
 
             switch (choice) {
                 case 1:
+                    /*
+                     * Check the missions
+                     * */
                     SheildService.checkMissions(dataSource.getMissions());
                     break;
                 case 2:
+                    /*
+                     *  Assign mission to Avengers
+                     * */
                     System.out.println("Enter Avengers : ");
                     String[] avengersList = in.readLine().split(",");
                     System.out.println("Enter Mission Name : ");
@@ -49,12 +52,12 @@ public class Main {
                 case 3:
                     System.out.println("Enter Mission Name : ");
                     missionName = in.readLine();
-                    System.out.println(dataSource.getMission(missionName).toString());
+                    SheildService.checkMissionsDetails(dataSource, missionName);
                     break;
                 case 4:
                     System.out.println("Enter Avenger Name : ");
                     String avengerName = in.readLine();
-                    System.out.println(dataSource.getAvenger(avengerName).toString());
+                    SheildService.checkAvengerDetails(dataSource, avengerName);
                     break;
                 case 5:
                     System.out.println("Enter Mission Name : ");
@@ -69,6 +72,7 @@ public class Main {
                     break;
                 default:
                     System.out.println("Please choose valid option 1 to 6");
+                    break;
             }
         }
     }
