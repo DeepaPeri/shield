@@ -7,7 +7,7 @@ public class Sms implements NotificationMedium {
     @Override
     public void sendMessage(Mission mission, Avenger avenger, String message) {
         // use code to send message via sms
-        System.out.println(message);
-        System.out.println("SMS notification has been sent for mission : " + mission.getMissionName() + "to : " + avenger.getAvengerName());
+        System.out.println(message + "\nSMS notification has been sent for mission : " + mission.getMissionName() + " to : " + avenger.getAvengerName());
+
     }
 }

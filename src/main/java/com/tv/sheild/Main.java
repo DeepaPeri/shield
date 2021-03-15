@@ -1,6 +1,8 @@
 package com.tv.sheild;
 
-import com.tv.sheild.datasource.DataSource;
+import com.tv.sheild.datasource.DbInitializer;
+import com.tv.sheild.datasource.InMemoryDataSource;
+import com.tv.sheild.datasource.InMemoryDataSourceImpl;
 import com.tv.sheild.service.SheildService;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,7 +10,7 @@ import java.io.InputStreamReader;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        DataSource dataSource = new DataSource();
+        InMemoryDataSource inMemoryDataSource = DbInitializer.initializeInMemoryDatabase();
         /*
          * Introduction
          * */
@@ -34,7 +36,7 @@ public class Main {
                     /*
                      * Check the missions
                      * */
-                    SheildService.checkMissions(dataSource.getMissions());
+                    SheildService.checkMissions(inMemoryDataSource.getMissions());
                     break;
                 case 2:
                     /*
@@ -46,18 +48,18 @@ public class Main {
                     String missionName = in.readLine();
                     System.out.println("Enter Mission Details : ");
                     String missionDetails = in.readLine();
-                    SheildService.assignMissionToAvengers(avengersList, missionName, missionDetails, dataSource);
+                    SheildService.assignMissionToAvengers(avengersList, missionName, missionDetails, (InMemoryDataSourceImpl) inMemoryDataSource);
                     break;
 
                 case 3:
                     System.out.println("Enter Mission Name : ");
                     missionName = in.readLine();
-                    SheildService.checkMissionsDetails(dataSource, missionName);
+                    SheildService.checkMissionsDetails((InMemoryDataSourceImpl) inMemoryDataSource, missionName);
                     break;
                 case 4:
                     System.out.println("Enter Avenger Name : ");
                     String avengerName = in.readLine();
-                    SheildService.checkAvengerDetails(dataSource, avengerName);
+                    SheildService.checkAvengerDetails((InMemoryDataSourceImpl) inMemoryDataSource, avengerName);
                     break;
                 case 5:
                     System.out.println("Enter Mission Name : ");
@@ -65,10 +67,10 @@ public class Main {
                     System.out.println("Enter new status : ");
                     String status = in.readLine();
 
-                    SheildService.updateMissionStatus(missionName, dataSource, status);
+                    SheildService.updateMissionStatus(missionName, (InMemoryDataSourceImpl) inMemoryDataSource, status);
                     break;
                 case 6:
-                    SheildService.listAvengers(dataSource);
+                    SheildService.listAvengers((InMemoryDataSourceImpl) inMemoryDataSource);
                     break;
                 default:
                     System.out.println("Please choose valid option 1 to 6");

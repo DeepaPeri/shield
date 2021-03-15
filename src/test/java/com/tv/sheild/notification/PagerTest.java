@@ -13,10 +13,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.annotation.Testable;
 
 @Testable
-public class EmailTest {
+public class PagerTest {
     private final PrintStream standardOut = System.out;
     private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
-    private NotificationMedium email = new Email();
+    private NotificationMedium pager = new Pager();
 
     @BeforeEach
     public void setUp() {
@@ -28,10 +28,10 @@ public class EmailTest {
         Mission mission = new Mission("mission name", "mission details", MissionStatus.ASSIGNED);
         Avenger avenger = new Avenger("Black Widow", "Fight Skills", new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), AvengerStatus.AVAILABLE);
         String message = "test message";
-        email.sendMessage(mission, avenger, message);
+        pager.sendMessage(mission, avenger, message);
 
         String expectedResult ="test message\n" +
-                "Email notification has been sent for mission : mission name to : Black Widow";
+                "Pager notification has been sent for mission : mission name to : Black Widow";
         Assertions.assertEquals(expectedResult.trim(), outputStreamCaptor.toString()
                 .trim());
     }

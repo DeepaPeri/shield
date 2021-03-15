@@ -1,5 +1,6 @@
 package com.tv.sheild.models;
 
+import java.util.Objects;
 import java.util.Set;
 
 public class Mission {
@@ -57,5 +58,21 @@ public class Mission {
             avengersCommaSeperated = avengersCommaSeperated.concat(avenger.getAvengerName() + "| ");
         }
         return "Mission Name : " + missionName + ", mission status : " + missionStatus + ", avengers : " + avengersCommaSeperated;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Mission mission = (Mission) o;
+        return getMissionName().equals(mission.getMissionName()) &&
+                getMissionDetails().equals(mission.getMissionDetails()) &&
+                getMissionStatus() == mission.getMissionStatus() &&
+                getAvengers().equals(mission.getAvengers());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getMissionName(), getMissionDetails(), getMissionStatus(), getAvengers());
     }
 }

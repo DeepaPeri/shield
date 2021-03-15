@@ -1,6 +1,7 @@
 package com.tv.sheild.models;
 
 import com.tv.sheild.acl.Acl;
+import java.util.Objects;
 import java.util.Set;
 
 public class Captain {
@@ -28,5 +29,19 @@ public class Captain {
 
     public void setAcl(Set<Acl> acl) {
         this.acl = acl;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Captain captain = (Captain) o;
+        return getCaptainName().equals(captain.getCaptainName()) &&
+                getAcl().equals(captain.getAcl());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getCaptainName(), getAcl());
     }
 }

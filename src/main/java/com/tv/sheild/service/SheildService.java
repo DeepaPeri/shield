@@ -1,6 +1,6 @@
 package com.tv.sheild.service;
 
-import com.tv.sheild.datasource.DataSource;
+import com.tv.sheild.datasource.InMemoryDataSourceImpl;
 import com.tv.sheild.models.Avenger;
 import com.tv.sheild.models.AvengerStatus;
 import com.tv.sheild.models.Mission;
@@ -9,6 +9,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class SheildService {
+
+    private static int maxMissions = 2;
 
     public static void checkMissions(Set<Mission> missions) {
         if (missions.isEmpty()) {
@@ -20,13 +22,13 @@ public class SheildService {
         }
     }
 
-    public static void checkMissionsDetails(DataSource dataSource, String missionsName) {
-        Mission mission = dataSource.getMission(missionsName);
+    public static void checkMissionsDetails(InMemoryDataSourceImpl inMemoryDataSourceImpl, String missionsName) {
+        Mission mission = inMemoryDataSourceImpl.getMission(missionsName);
         System.out.println(mission.toString() + ", mission details : " + mission.getMissionDetails());
     }
 
-    public static void checkAvengerDetails(DataSource dataSource, String avengerName) {
-        Avenger avenger = dataSource.getAvenger(avengerName);
+    public static void checkAvengerDetails(InMemoryDataSourceImpl inMemoryDataSourceImpl, String avengerName) {
+        Avenger avenger = inMemoryDataSourceImpl.getAvenger(avengerName);
         System.out.println(avenger.toString() + ", missions assigned : " + avenger.getMissionAssigned().size() + ", missions completed : " + avenger.getMissionsCompleted().size());
     }
 
@@ -34,13 +36,13 @@ public class SheildService {
         avenger.getNotificationMediumMedia().forEach(notification -> notification.sendMessage(mission, avenger, "Notification via " + notification.getClass().getSimpleName() + " has been sent to : " + avenger.getAvengerName()));
     }
 
-    public static void assignMissionToAvengers(String[] avengersList, String missionName, String missionDetails, DataSource dataSource) {
+    public static void assignMissionToAvengers(String[] avengersList, String missionName, String missionDetails, InMemoryDataSourceImpl inMemoryDataSourceImpl) {
         Set<Avenger> avengerSet = new HashSet<>();
         Set<Mission> missionsSet;
         Mission mission = new Mission(missionName, missionDetails, MissionStatus.ASSIGNED);
 
         for (int i = 0; i < avengersList.length; i++) {
-            Avenger avenger = dataSource.getAvenger(avengersList[i]);
+            Avenger avenger = inMemoryDataSourceImpl.getAvenger(avengersList[i]);
 
             if (avenger == null) {
                 System.out.println("Avenger is not in S.H.I.E.L.D, please assign valied avenger");
@@ -48,32 +50,32 @@ public class SheildService {
             }
 
             missionsSet = avenger.getMissionAssigned();
-            if (missionsSet.size() == 2) {
+            if (missionsSet.size() == maxMissions) {
                 System.out.println("Avenger " + avenger.getAvengerName() + " already has two missions assigned, current mission cannot be assigned");
                 return;
             }
 
             missionsSet.add(mission);
-            dataSource.removeAvenger(avenger);
+            inMemoryDataSourceImpl.removeAvenger(avenger);
             avenger.setStatus(AvengerStatus.ON_MISSION);
 
             avenger.setMissionAssigned(missionsSet);
-            dataSource.addAvenger(avenger);
+            inMemoryDataSourceImpl.addAvenger(avenger);
             avengerSet.add(avenger);
 
             SheildService.sendNotification(avenger, mission);
         }
         mission.setAvengers(avengerSet);
-        dataSource.addMission(mission);
+        inMemoryDataSourceImpl.addMission(mission);
     }
 
-    public static void updateMissionStatus(String missionName, DataSource dataSource, String status) {
-        Mission mission = dataSource.getMission(missionName);
+    public static void updateMissionStatus(String missionName, InMemoryDataSourceImpl inMemoryDataSourceImpl, String status) {
+        Mission mission = inMemoryDataSourceImpl.getMission(missionName);
         if (mission == null) {
             System.out.println("Invalid mission name, the request mission doesn't exist");
             return;
         }
-        dataSource.removeMission(mission);
+        inMemoryDataSourceImpl.removeMission(mission);
         switch (status) {
             case "Completed":
                 mission.setMissionStatus(MissionStatus.COMPLETED);
@@ -92,7 +94,7 @@ public class SheildService {
                 System.out.println("Invalid mission status, cannot be updated");
                 break;
         }
-        dataSource.addMission(mission);
+        inMemoryDataSourceImpl.addMission(mission);
 
         mission.getAvengers().forEach(
                 avenger ->
@@ -100,8 +102,8 @@ public class SheildService {
         );
     }
 
-    public static void listAvengers(DataSource dataSource) {
-        dataSource.getAvengers().forEach(avenger -> {
+    public static void listAvengers(InMemoryDataSourceImpl inMemoryDataSourceImpl) {
+        inMemoryDataSourceImpl.getAvengers().forEach(avenger -> {
             System.out.print(avenger.toString());
             System.out.print(", missions completed : ");
             avenger.getMissionsCompleted().forEach(mission -> System.out.print(mission.getMissionName() + ", "));
@@ -110,4 +112,5 @@ public class SheildService {
             System.out.println();
         });
     }
+
 }

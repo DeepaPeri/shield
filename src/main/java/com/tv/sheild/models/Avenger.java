@@ -2,6 +2,8 @@ package com.tv.sheild.models;
 
 import com.tv.sheild.acl.Acl;
 import com.tv.sheild.notification.NotificationMedium;
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class Avenger {
@@ -28,6 +30,7 @@ public class Avenger {
         this.notificationMediumMedia = notificationMediumMedia;
         this.acl = acl;
         this.status = avengerStatus;
+        this.missionAssigned = new HashSet<>();
     }
 
     public String getAvengerName() {
@@ -97,5 +100,24 @@ public class Avenger {
     @Override
     public String toString() {
         return "Avenger name : " + avengerName + ", ability : " + abilities + ", Status : " + status;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Avenger avenger = (Avenger) o;
+        return Objects.equals(getAvengerName(), avenger.getAvengerName()) &&
+                Objects.equals(getAbilities(), avenger.getAbilities()) &&
+                getStatus() == avenger.getStatus() &&
+                Objects.equals(getMissionAssigned(), avenger.getMissionAssigned()) &&
+                Objects.equals(getMissionsCompleted(), avenger.getMissionsCompleted()) &&
+                Objects.equals(getNotificationMediumMedia(), avenger.getNotificationMediumMedia()) &&
+                Objects.equals(getAcl(), avenger.getAcl());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getAvengerName(), getAbilities(), getStatus(), getMissionAssigned(), getMissionsCompleted(), getNotificationMediumMedia(), getAcl());
     }
 }
